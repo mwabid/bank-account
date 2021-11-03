@@ -2,10 +2,8 @@ package com.sg.bank.account;
 
 import com.sg.bank.account.application.AuthenticationService;
 import com.sg.bank.account.application.ConfigService;
-import com.sg.bank.account.domain.Account;
-import com.sg.bank.account.domain.AccountRepository;
-import com.sg.bank.account.domain.Client;
-import com.sg.bank.account.domain.ClientRepository;
+import com.sg.bank.account.domain.*;
+import io.rabitka.validator.core.TypeCheckerFactoryRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -29,7 +27,9 @@ public class BankAccountSpringApplication {
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
 
-        final int minimumDepositAmount = 10;
+        TypeCheckerFactoryRegistry.addTypeChecker(AmountMetaType.class, new AmountMetatypeValidator.Factory());
+
+        final Amount minimumDepositAmount = Amount.inEur(10);
         final String emailAddress = "abc@sg.com";
 
         this.configService.setMinimumDepositAmount(minimumDepositAmount);

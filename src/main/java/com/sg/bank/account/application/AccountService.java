@@ -5,8 +5,6 @@ import io.rabitka.core.ddd.ApplicationService;
 
 import java.util.List;
 
-;
-
 @ApplicationService
 public class AccountService {
 
@@ -25,7 +23,7 @@ public class AccountService {
         this.clockService = clockService;
     }
 
-    public void deposit(int amount) {
+    public void deposit(Amount amount) {
 
         this.accountRepository.findBy(AccountPredicates.ownerIdIsEqualsTo(
                 getAuthenticatedClientId()
@@ -37,7 +35,7 @@ public class AccountService {
         );
     }
 
-    public void withdrawal(int amount) throws InsufficientBalanceException {
+    public void withdrawal(Amount amount) throws InsufficientBalanceException {
         Account account = this.accountRepository.findBy(AccountPredicates.ownerIdIsEqualsTo(
                 getAuthenticatedClientId()
         )).getInList().get(0);

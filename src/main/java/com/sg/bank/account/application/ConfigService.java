@@ -1,7 +1,9 @@
 package com.sg.bank.account.application;
 
-public interface ConfigService {
-    void setMinimumDepositAmount(int minimumDepositAmount);
+import com.sg.bank.account.domain.Amount;
 
-    Integer getMinimumDepositAmount();
+public interface ConfigService {
+    void setMinimumDepositAmount(Amount minimumDepositAmount);
+
+    Amount getMinimumDepositAmount();
 }

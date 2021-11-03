@@ -2,7 +2,6 @@ package com.sg.bank.account.domain;
 
 import io.rabitka.core.ddd.IValueType;
 import io.rabitka.core.ddd.ValueType;
-import io.rabitka.core.metatype.IntegerMetatype;
 
 import java.time.LocalDate;
 
@@ -11,12 +10,12 @@ public class Operation implements IValueType {
 
     private final Type type;
     private final LocalDate date;
-    @IntegerMetatype(onlyPositive = true)
-    private final Integer amount;
-    @IntegerMetatype(onlyPositive = true)
-    private final Integer balance;
+    @AmountMetaType(onlyPositive = true)
+    private final Amount amount;
+    @AmountMetaType(onlyPositive = true)
+    private final Amount balance;
 
-    public Operation(Type type, LocalDate date, int amount, int balance) {
+    public Operation(Type type, LocalDate date, Amount amount, Amount balance) {
         this.type = type;
         this.date = date;
         this.amount = amount;
@@ -32,11 +31,11 @@ public class Operation implements IValueType {
         return date;
     }
 
-    public int getAmount() {
+    public Amount getAmount() {
         return amount;
     }
 
-    public int getBalance() {
+    public Amount getBalance() {
         return balance;
     }
 

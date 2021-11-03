@@ -51,8 +51,9 @@ public class Account implements IEntity<Account.Id> {
         AccountValidator.validate(this);
     }
 
-    public void deposit(int amount, Integer minimumDepositAmount, ClockService clockService) {
-        if (amount < minimumDepositAmount) {
+    public void deposit(Amount amount, Amount minimumDepositAmount, ClockService clockService) {
+        System.out.println("deposit : amount = " + amount + ", minimumDepositAmount = " + minimumDepositAmount + ", clockService = " + clockService);
+        if (amount.isLessThan(minimumDepositAmount)) {
             throw new DepositAmountLessThanTheMinimumException(
                     String.format("Cannot make deposit of %s, minimum required is %s",
                             amount,
@@ -65,11 +66,11 @@ public class Account implements IEntity<Account.Id> {
                         Operation.Type.DEPOSIT,
                         clockService.dateNow(),
                         amount,
-                        getBalance() + amount));
+                        getBalance().add(amount)));
     }
 
-    public void withdrawal(int amount, ClockService clockService) throws InsufficientBalanceException {
-        if (amount > getBalance()) {
+    public void withdrawal(Amount amount, ClockService clockService) throws InsufficientBalanceException {
+        if (getBalance().isLessThan(amount) ) {
             throw new InsufficientBalanceException(
                     String.format(
                             "Cannot withdrawal the amount of %s, your balance account is insufficient %s euro",
@@ -83,20 +84,21 @@ public class Account implements IEntity<Account.Id> {
                         Operation.Type.WITHDRAWAL,
                         clockService.dateNow(),
                         amount,
-                        getBalance() - amount));
+                        getBalance().subtract(amount)));
     }
 
     private void addOperation(Operation operation) {
+        System.out.println("addOperation : operation = " + operation);
         this.operations.add(
                 0,
                 operation
         );
     }
 
-    public int getBalance() {
+    public Amount getBalance() {
         return getLastOperation()
                 .map(Operation::getBalance)
-                .orElse(0);
+                .orElse(Amount.inEur(0));
     }
 
     private Optional<Operation> getLastOperation() {
