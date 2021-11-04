@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.String.format;
 import static java.util.Collections.unmodifiableList;
 
 @AggregateRoot
@@ -52,10 +53,9 @@ public class Account implements IEntity<Account.Id> {
     }
 
     public void deposit(Amount amount, Amount minimumDepositAmount, ClockService clockService) {
-        System.out.println("deposit : amount = " + amount + ", minimumDepositAmount = " + minimumDepositAmount + ", clockService = " + clockService);
         if (amount.isLessThan(minimumDepositAmount)) {
             throw new DepositAmountLessThanTheMinimumException(
-                    String.format("Cannot make deposit of %s, minimum required is %s",
+                    format("Cannot make deposit of %s, minimum required is %s",
                             amount,
                             minimumDepositAmount
                     )
@@ -72,7 +72,7 @@ public class Account implements IEntity<Account.Id> {
     public void withdrawal(Amount amount, ClockService clockService) throws InsufficientBalanceException {
         if (getBalance().isLessThan(amount) ) {
             throw new InsufficientBalanceException(
-                    String.format(
+                    format(
                             "Cannot withdrawal the amount of %s, your balance account is insufficient %s euro",
                             amount,
                             getBalance()
@@ -88,7 +88,6 @@ public class Account implements IEntity<Account.Id> {
     }
 
     private void addOperation(Operation operation) {
-        System.out.println("addOperation : operation = " + operation);
         this.operations.add(
                 0,
                 operation

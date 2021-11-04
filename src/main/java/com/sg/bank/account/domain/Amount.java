@@ -20,12 +20,8 @@ package com.sg.bank.account.domain;
 
 import io.rabitka.core.ddd.IValueType;
 import io.rabitka.core.ddd.ValueType;
-import io.rabitka.core.metatype.IntegerMetatype;
-import io.rabitka.core.metatype.StringMetatype;
-import io.rabitka.validator.core.InvalidDomainObjectException;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 import static java.lang.String.format;
 import static java.math.BigDecimal.valueOf;
@@ -40,14 +36,15 @@ public class Amount implements IValueType {
     }
 
     public enum Currency {
-        EURO
+        EUR,
+        USD
     }
 
     private BigDecimal value;
     private Currency currency;
 
     public static Amount inEur(int value) {
-        return new Amount(new BigDecimal(value), Currency.EURO);
+        return new Amount(new BigDecimal(value), Currency.EUR);
     }
 
     public Amount(BigDecimal value, Currency currency) {
@@ -78,7 +75,8 @@ public class Amount implements IValueType {
 
     public boolean isLessThan(Amount amount) {
         if (haveDifferentCurrencyThan(amount)) {
-            throw new CurrencyException(format("Cannot compare amounts having different currencies : cannot compare %s to %s", amount, this.toString()));
+            throw new CurrencyException(format("Cannot compare amounts having different currencies : " +
+                    "cannot compare %s to %s", amount, this));
         }
         return this.value.compareTo(amount.value) < 0;
     }
@@ -102,7 +100,6 @@ public class Amount implements IValueType {
                 ", currency='" + currency + '\'' +
                 '}';
     }
-
 
     @Override
     public boolean equals(Object o) {
